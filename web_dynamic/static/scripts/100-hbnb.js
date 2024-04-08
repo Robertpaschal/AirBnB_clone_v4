@@ -11,32 +11,68 @@ $(document).ready(function () {
     }
   });
 
-  let selectedAmenities = [];
+  const selectedAmenities = [];
+  let selectedStates = [];
+  let selectedCities = [];
+
   $('input[type="checkbox"]').change(function () {
-    const amenityId = $(this).data('id');
-    const amenityName = $(this).data('name');
+    const dataType = $(this).data('type');
+    const dataId = $(this).data('id');
+    const dataName = $(this).data('name');
 
     if ($(this).prop('checked')) {
-      selectedAmenities.push({ id: amenityId, name: amenityName });
+      if (dataType === 'state') {
+        selectedStates.push({ id: dataId, name: dataName });
+      } else if (dataType === 'city') {
+        selectedCities.push({ id: dataId, name: dataName });
+      }
     } else {
-      selectedAmenities = selectedAmenities.filter(function (amenity) {
-        return amenity.id !== amenityId;
-      });
+      if (dataType === 'state') {
+        selectedStates = selectedStates.filter(function (state) {
+          return state.id !== dataId;
+        });
+      } else if (dataType === 'city') {
+        selectedCities = selectedCities.filter(function (city) {
+          return city.id !== dataId;
+        });
+      }
     }
 
-    const amenitiesList = selectedAmenities.map(function (amenity) {
-      return amenity.name;
+    const statesList = selectedStates.map(function (state) {
+      return state.name;
     }).join(', ');
 
-    $('#amenities h4').text('Selected Amenities: ' + amenitiesList);
+    const citiesList = selectedCities.map(function (city) {
+      return city.name;
+    }).join(', ');
+
+    $('#locations h4').text('Selected States: ' + statesList + ' | Selected Cities: ' + citiesList);
   });
 
   $('#search-button').click(function () {
+    const selectedAmenitiesIds = selectedAmenities.map(function (amenity) {
+      return amenity.id;
+    });
+
+    const selectedStatesIds = selectedStates.map(function (state) {
+      return state.id;
+    });
+
+    const selectedCitiesIds = selectedCities.map(function (city) {
+      return city.id;
+    });
+
+    const requestData = {
+      amenities: selectedAmenitiesIds,
+      states: selectedStatesIds,
+      cities: selectedCitiesIds
+    };
+
     $.ajax({
       url: 'http://0.0.0.0:5001/api/v1/places_search/',
       type: 'POST',
       contentType: 'application/json',
-      data: JSON.stringify({}),
+      data: JSON.stringify(requestData),
       success: function (response) {
         $('section.places').empty();
         $.each(response, function (index, place) {

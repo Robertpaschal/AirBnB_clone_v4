@@ -11,7 +11,7 @@ window.addEventListener('DOMContentloaded', function () {
     }
   });
 
-  const selectedAmenities = [];
+  let selectedAmenities = [];
   $('input[type="checkbox"]').change(function () {
     const amenityId = $(this).data('id');
     const amenityName = $(this).data('name');

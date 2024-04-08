@@ -6,7 +6,7 @@ $(document).ready(function () {
     const amenityName = $(this).data('name');
 
     if ($(this).prop('checked')) {
-      selectedAmenities.push({ id: amenityId, name: amenityNam });
+      selectedAmenities.push({ id: amenityId, name: amenityName });
     } else {
       selectedAmenities = selectedAmenities.filter(function (amenity) {
         return amenity.id !== amenityId;
